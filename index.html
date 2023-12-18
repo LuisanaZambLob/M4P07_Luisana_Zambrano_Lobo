@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graficas</title>
+</head>
+<body>
+            <div id="graph"></div>
+            <script src="https://d3js.org/d3.v4.js"></script>
+        
+            <script>
+                // Definición de constantes
+                const GRAPH_HEIGHT = 300;
+                const GRAPH_WIDTH = 400;
+                const MARGIN = 30;
+                const MAX_RANGE = 100; // Nuevo rango de 0 a 100
+                const POINT_RADIUS = 5; // Nuevo radio para los círculos
+        
+                const NEW_DATA = [
+                    { x: 20, y: 30 },
+                    { x: 35, y: 10 },
+                    { x: 70, y: 38 },
+                    { x: 100, y: 100 },
+                ];
+        
+                // Funciones escalares
+                const xScale = d3.scaleLinear()
+                    .domain([0, MAX_RANGE]) // Actualizado para tener un rango de 0 a 100
+                    .range([0, GRAPH_WIDTH]);
+        
+                const yScale = d3.scaleLinear()
+                    .domain([0, MAX_RANGE]) // Actualizado para tener un rango de 0 a 100
+                    .range([GRAPH_HEIGHT, 0]);
+        
+                // Añadimos la gráfica al elemento del DOM
+                let svg = d3.select("#graph")
+                    .append("svg")
+                    .attr("width", GRAPH_WIDTH + MARGIN * 2)
+                    .attr("height", GRAPH_HEIGHT + MARGIN * 2)
+                    .append("g")
+                    .attr("transform", `translate(${MARGIN}, ${MARGIN})`);
+        
+                // Añadimos las líneas de los ejes
+                svg.append('g')
+                    .attr("transform", `translate(0, ${GRAPH_HEIGHT})`)
+                    .call(d3.axisBottom(xScale));
+        
+                svg.append('g')
+                    .call(d3.axisLeft(yScale));
+        
+                // Borrar todos los puntos anteriores
+                svg.selectAll("circle").remove();
+        
+                // Añadir nuevos puntos
+                svg.selectAll("whatever")
+                    .data(NEW_DATA)
+                    .enter()
+                    .append("circle")
+                    .attr("cx", ({ x }) => xScale(x))
+                    .attr("cy", ({ y }) => yScale(y))
+                    .attr("r", POINT_RADIUS)
+                    .attr("cursor", "pointer") // Añadir atributo "cursor" para indicar que son clickeables
+                    .on("click", ({ x, y }) => alert(`Posición: (${x}, ${y})`)); // Mostrar alerta al hacer clic
+            </script>
+</body>
+</html>
